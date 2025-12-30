@@ -1,10 +1,10 @@
-# Files of Hackathon
+# Files of Hackthon
 
-This directory contains files related to the hackathon project.
+This directory contains files related to the hackthon project.
 
 ## Purpose
 
-This directory is intended to store hackathon-related materials, including:
+This directory is intended to store hackthon-related materials, including:
 - Project documentation
 - Source code
 - Presentation materials
@@ -12,4 +12,4 @@ This directory is intended to store hackathon-related materials, including:
 
 ## Getting Started
 
-Add your hackathon files to this directory to keep them organized.
+Add your hackthon files to this directory to keep them organized.
