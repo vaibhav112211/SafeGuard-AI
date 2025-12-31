@@ -1,16 +1,19 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'providers/auth_ui_provider.dart';
 import 'providers/child_ui_provider.dart';
 import 'providers/parent_ui_provider.dart';
+import 'providers/content_monitor_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/parent/parent_home_screen.dart';
 import 'screens/child/child_home_screen.dart';
 
 void main() async {
-WidgetsFlutterBinding.ensureInitialized();
-runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -23,6 +26,7 @@ providers: [
 ChangeNotifierProvider(create: (_) => AuthUIProvider()),
 ChangeNotifierProvider(create: (_) => ChildUIProvider()),
 ChangeNotifierProvider(create: (_) => ParentUIProvider()),
+ChangeNotifierProvider(create: (_) => ContentMonitorProvider()),
 ],
 child: MaterialApp(
 title: 'Parental Control App',

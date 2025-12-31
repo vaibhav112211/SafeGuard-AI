@@ -1,10 +1,10 @@
 name: parental_control_app
 description: A parental control application
-publish_to: 'none'
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -14,6 +14,10 @@ dependencies:
   webview_flutter: ^4.4.2
   shared_preferences: ^2.2.2
   intl: ^0.18.1
+  http: ^1.1.0
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
 
 dev_dependencies:
   flutter_test:

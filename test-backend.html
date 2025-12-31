@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SafeGuard AI - Backend Test</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .container {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+      h1 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 28px;
+      }
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+      }
+      input:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+        font-family: inherit;
+      }
+      button {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      button:hover {
+        transform: translateY(-2px);
+      }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .examples {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #e0e0e0;
+      }
+      .example-btn {
+        display: inline-block;
+        padding: 8px 16px;
+        margin: 5px;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .example-btn:hover {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+      }
+      .result {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 10px;
+        display: none;
+      }
+      .result.show {
+        display: block;
+      }
+      .result.allow {
+        background: #d4edda;
+        border: 2px solid #28a745;
+      }
+      .result.warn {
+        background: #fff3cd;
+        border: 2px solid #ffc107;
+      }
+      .result.block {
+        background: #f8d7da;
+        border: 2px solid #dc3545;
+      }
+      .result-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .result-detail {
+        margin: 8px 0;
+        font-size: 14px;
+      }
+      .error {
+        background: #f8d7da;
+        border: 2px solid #dc3545;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+        display: none;
+      }
+      .error.show {
+        display: block;
+      }
+      .note {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 12px;
+        margin-top: 20px;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #0c5460;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🛡️ SafeGuard AI Backend Test</h1>
+      <p class="subtitle">Test the content analysis API</p>
+
+      <div class="note">
+        ⚠️ <strong>Note:</strong> You need to be authenticated with Firebase to
+        use this. This page is for demonstration only.
+      </div>
+
+      <form id="testForm">
+        <div class="form-group">
+          <label for="childId">Child ID</label>
+          <input
+            type="text"
+            id="childId"
+            value="child123"
+            placeholder="e.g., child123"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="url">URL (Optional)</label>
+          <input type="text" id="url" placeholder="e.g., example.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="content">Content to Analyze</label>
+          <textarea
+            id="content"
+            placeholder="Enter text content to analyze..."
+          ></textarea>
+        </div>
+
+        <button type="submit" id="submitBtn">Analyze Content</button>
+      </form>
+
+      <div class="examples">
+        <strong>Quick Examples:</strong><br />
+        <span
+          class="example-btn"
+          onclick="setExample('Hello, how are you? I love learning new things!')"
+          >✅ Safe Content</span
+        >
+        <span
+          class="example-btn"
+          onclick="setExample('I hate this stupid assignment')"
+          >⚠️ Warning</span
+        >
+        <span
+          class="example-btn"
+          onclick="setExample('Check out this xxx adult porn content')"
+          >🚫 Blocked</span
+        >
+      </div>
+
+      <div id="result" class="result"></div>
+      <div id="error" class="error"></div>
+
+      <div class="note" style="margin-top: 30px">
+        <strong>API Status:</strong><br />
+        Backend URL:
+        <code>http://127.0.0.1:5001/safeguardai-95296/us-central1/api</code
+        ><br />
+        Emulator UI:
+        <a href="http://127.0.0.1:4000/" target="_blank"
+          >http://127.0.0.1:4000/</a
+        >
+      </div>
+    </div>
+
+    <script>
+      function setExample(text) {
+        document.getElementById("content").value = text;
+      }
+
+      document
+        .getElementById("testForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const submitBtn = document.getElementById("submitBtn");
+          const resultDiv = document.getElementById("result");
+          const errorDiv = document.getElementById("error");
+
+          // Hide previous results
+          resultDiv.classList.remove("show", "allow", "warn", "block");
+          errorDiv.classList.remove("show");
+
+          // Get form values
+          const childId = document.getElementById("childId").value;
+          const url = document.getElementById("url").value;
+          const content = document.getElementById("content").value;
+
+          if (!content) {
+            errorDiv.textContent = "Please enter content to analyze";
+            errorDiv.classList.add("show");
+            return;
+          }
+
+          // Disable button
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Analyzing...";
+
+          try {
+            const response = await fetch(
+              "http://127.0.0.1:5001/safeguardai-95296/us-central1/api/analyze",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: "Bearer YOUR_FIREBASE_TOKEN_HERE", // This won't work without real auth
+                },
+                body: JSON.stringify({
+                  childId: childId || "test",
+                  url: url || "unknown",
+                  content: content,
+                }),
+              }
+            );
+
+            if (response.status === 401) {
+              throw new Error(
+                "Authentication required. Please use the Flutter app with Firebase Auth."
+              );
+            }
+
+            if (!response.ok) {
+              throw new Error(`API error: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            // Show result
+            const decision = result.decision || "unknown";
+            const severity = result.severity || "unknown";
+            const score = result.score || 0;
+
+            let icon = "✅";
+            let statusText = "Allowed";
+            if (decision === "block") {
+              icon = "🚫";
+              statusText = "Blocked";
+            } else if (decision === "warn") {
+              icon = "⚠️";
+              statusText = "Warning";
+            }
+
+            resultDiv.innerHTML = `
+                    <div class="result-title">${icon} ${statusText}</div>
+                    <div class="result-detail"><strong>Decision:</strong> ${decision.toUpperCase()}</div>
+                    <div class="result-detail"><strong>Severity:</strong> ${severity.toUpperCase()}</div>
+                    <div class="result-detail"><strong>Score:</strong> ${score.toFixed(
+                      2
+                    )}</div>
+                `;
+            resultDiv.classList.add("show", decision);
+          } catch (error) {
+            errorDiv.textContent = `Error: ${error.message}`;
+            errorDiv.classList.add("show");
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Analyze Content";
+          }
+        });
+    </script>
+  </body>
+</html>
